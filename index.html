@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backtest Studio — Test a trading strategy on real history</title>
+<meta name="description" content="Pick an asset and a strategy, run a backtest on real daily price data, and see the equity curve, return, drawdown and trades. Backtests are not predictions.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <span class="brand-mark">▚</span>
+      <div>
+        <h1>Backtest Studio</h1>
+        <p class="tagline">Test a trading strategy on real history — before risking a dollar.</p>
+      </div>
+    </div>
+    <span class="badge">Arbiter Hacks V1 · General Track</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel controls" aria-label="Backtest controls">
+    <div class="control-group">
+      <label>Asset</label>
+      <div class="btn-row" id="asset-row" role="group" aria-label="Asset">
+        <button data-asset="btc" class="pick active">BTC</button>
+        <button data-asset="eth" class="pick">ETH</button>
+        <button data-asset="xrp" class="pick">XRP</button>
+        <button data-asset="sol" class="pick">SOL</button>
+        <button data-asset="gold" class="pick">Gold</button>
+      </div>
+    </div>
+    <div class="control-group">
+      <label>Strategy</label>
+      <div class="btn-row" id="strategy-row" role="group" aria-label="Strategy">
+        <button data-strategy="trend" class="pick active">Trend · EMA 9/21</button>
+        <button data-strategy="meanReversion" class="pick">Mean reversion · RSI 14</button>
+        <button data-strategy="breakout" class="pick">Breakout · Donchian 20/10</button>
+      </div>
+    </div>
+    <div class="control-group">
+      <label>Period</label>
+      <div class="btn-row" id="period-row" role="group" aria-label="Period">
+        <button data-period="6M" class="pick">6M</button>
+        <button data-period="1Y" class="pick">1Y</button>
+        <button data-period="2Y" class="pick active">2Y</button>
+      </div>
+    </div>
+    <div class="control-row">
+      <button id="run-btn" class="run-btn">▶ Run backtest</button>
+      <button id="data-toggle" class="ghost-btn" title="Switch between the bundled dataset and a live fetch">Data: Bundled (verified)</button>
+      <span id="data-status" class="data-status" role="status">Loading data…</span>
+    </div>
+    <div class="presets" aria-label="Verified presets">
+      <span class="presets-label">Verified runs — one click:</span>
+      <div class="btn-row" id="preset-row"></div>
+    </div>
+  </section>
+
+  <section class="panel results" id="results" aria-label="Backtest results">
+    <div class="results-head">
+      <h2 id="result-title">BTC · Trend — EMA 9/21</h2>
+      <p id="verdict" class="verdict"></p>
+    </div>
+    <div class="chart-wrap">
+      <div id="chart" class="chart"></div>
+      <div class="legend">
+        <span><i class="swatch strat"></i> Strategy</span>
+        <span><i class="swatch bh"></i> Buy &amp; hold</span>
+      </div>
+      <p id="chart-source" class="chart-source"></p>
+    </div>
+    <div class="stats" id="stats"></div>
+
+    <h3 class="section-title">Trades</h3>
+    <div class="table-wrap">
+      <table id="trades-table">
+        <thead>
+          <tr><th>Date</th><th>Side</th><th>Price</th><th>Units</th><th>P&amp;L</th></tr>
+        </thead>
+        <tbody id="trades-body"></tbody>
+      </table>
+      <p id="trades-note" class="table-note"></p>
+    </div>
+  </section>
+
+  <section class="panel how" aria-label="How it works">
+    <h2>How it works</h2>
+    <div class="how-grid" id="how-grid"></div>
+    <div class="rules">
+      <h3>The rules — same for every run</h3>
+      <ul>
+        <li><strong>$10,000</strong> starting equity, long-only spot. No leverage, no shorting.</li>
+        <li><strong>0.1% fee</strong> on every buy and every sell — and on buy-and-hold's entry and exit too.</li>
+        <li>Signals are computed on the <strong>daily close</strong> and executed at that close. No peeking at tomorrow.</li>
+        <li><strong>30-bar warmup.</strong> Every strategy and the benchmark start at the close of bar 30, so the comparison is fair.</li>
+        <li>Win rate counts completed round trips where the sell price was above the buy price.</li>
+      </ul>
+    </div>
+    <p class="disclaimer">Backtests are not predictions. A strategy that won over the last two years can lose over the next two. Nothing here is financial advice — this tool exists so you can see, honestly, what a simple rule would have done on real history.</p>
+  </section>
+
+  <footer class="footer">
+    <p>Backtest Studio · Built for Arbiter Hacks V1 (General Track) · Data: Kraken public OHLC API for crypto, Yahoo Finance for gold futures (GC=F) · Engine: deterministic, no server, no tracking.</p>
+  </footer>
+</main>
+
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
